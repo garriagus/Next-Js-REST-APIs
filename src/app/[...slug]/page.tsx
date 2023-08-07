@@ -1,4 +1,3 @@
-
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -7,36 +6,49 @@ import { notFound } from "next/navigation";
 
 interface PageProps {
     params: {
-        slug: string[];
+      slug: string[];
     };
-}
+  }
 
-async function getPageFromParams(params: PageProps["params"]) {
-    const slug = params?.slug.join("/");
-    const lowerCaseSlug = slug.toLowerCase();
-    const page = await fetch(process.env.SERVER + lowerCaseSlug).then((res) => res.json())
-    console.log("esta es la page"+process.env.SERVER + lowerCaseSlug)
-    //const page = employee.find((page: { slugAsParams: string; }) => page.slugAsParams === slug);
+  async function getPageFromParams(params: PageProps["params"]) {
+    const slug = params?.slug?.join("/");    
 
-    if (!page.status) {
-        return page;
+    const res = await fetch('http://localhost:8080/api/'+ slug)
+    console.log("aaaaa"+res.ok)
+    
+    
+    if (!res.ok) {
+        null
+      }
+     
+      return res.json()
+    
+  }
+
+interface Props {
+    Employee: {
+        id: number;
+        firstName: string;
+        lastName: string;
+        gender: string;
+        joiningDate: string;
+        retiringDate: string | null;
+        noOfChildren: number;
     }
-    null
 }
 
-export default async function Page({ params }: PageProps) {
+
+export default async function PagePage({ params }: PageProps) {
 
     const page = await getPageFromParams(params);
-    console.log(JSON.stringify(page, null, 2));
+
     if (!page) {
         notFound();
-    }
+      }
 
     return (
-        // Suponiendo que page es un array de objetos con propiedades: id, firstName, lastName, gender, joiningDate, retiringDate, noOfChildren, area, rfidKey
-
-      
-           
+        <div className="w-full md:w-1/3 p-6 flex flex-col flex-grow flex-shrink">
+            <h1 className="text-3xl font-bold mt-6">Lista de Empleados</h1>          
             <table className="w-full min-w-max table-auto text-left">
                 <thead>
                     <tr>
@@ -81,6 +93,6 @@ export default async function Page({ params }: PageProps) {
                 </tbody>
             </table>
     
-
+        </div>
     );
 };
