@@ -42,7 +42,7 @@ export default async function PagePage({ params }: PageProps) {
 
     const page = await getPageFromParams(params);
 
-    if (!page) {
+    if (!page || page.isArray) {
         notFound();
       }
 
@@ -52,7 +52,7 @@ export default async function PagePage({ params }: PageProps) {
             <table className="w-full min-w-max table-auto text-left">
                 <thead>
                     <tr>
-                        {Array.isArray(page) && page.length > 0 ? (
+                        {page.length > 0 ? (
                             Object.keys(page[0]).map((key) => (
                                 <th key={key} className="border-b border-blue-gray-100 bg-blue-gray-50 p-4">
                                     <h1 color="blue-gray" className="font-normal leading-none opacity-70">
