@@ -11,18 +11,14 @@ const FeedbackList: React.FC = () => {
   const fetchFeedbacks = async () => {
     const page = 1;
     const limit = 10;
-
     store.setPageLoading(true);
 
     try {
-      const feedbacks = await apiFetchFeedbacks(page, limit);
-      store.setFeedbackList(feedbacks);
+      const data = await apiFetchFeedbacks(page, limit); 
     } catch (error: any) {
       console.log(error);
       toast.error(error.toString());
     }
-
-    store.setPageLoading(false);
   };
 
   useEffect(() => {
