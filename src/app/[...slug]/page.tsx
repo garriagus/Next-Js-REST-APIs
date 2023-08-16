@@ -1,46 +1,41 @@
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { notFound } from "next/navigation";
 import { apiFetchAllData } from "@/api-requests";
+import internal from "stream";
+
+const SERVER_ENDPOINT = process.env.SERVER_ENDPOINT;
+
 
 interface PageProps {
   params: {
     slug: string[];
   };
 }
-
+// "http://192.168.0.4:8080/api/employees"
 
 async function getDataFromParams(params: PageProps["params"]) {
-  const slug = params?.slug?.join("/");  
-  const data= await apiFetchAllData(slug, 3)  
-  const res = await fetch("http://localhost:8080/api/" + slug);
-  console.log("aDATAaaaa" + data);
-  console.log("SLUGaaaaa" + res.ok);
+  const slug = params?.slug?.join("/");
 
-  if (!res.ok) {
-    null;
+  console.log("SLUGaaaaa" + slug);
+  //  const data = await apiFetchAllData(slug, 3)
+  const res = await fetch(SERVER_ENDPOINT + slug);
+  const page = await res.json();
+  console.log("aDATAaaaa" + res.ok);
+  console.log("SLUGaaaaa" + page);
+
+  if (!res.ok) {    
+    notFound();
   }
 
-  return data;
-}
-
-interface Props {
-  Employee: {
-    id: number;
-    firstName: string;
-    lastName: string;
-    gender: string;
-    joiningDate: string;
-    retiringDate: string | null;
-    noOfChildren: number;
-  };
+  return page;
 }
 
 export default async function PagePage({ params }: PageProps) {
   const page = await getDataFromParams(params);
 
-  if (!page) {
+  if (page == null) {
     notFound();
   }
 

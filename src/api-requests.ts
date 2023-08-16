@@ -76,9 +76,12 @@ export async function apiFetchSingleFeedback(
 export async function apiFetchAllData(
   slug: string,
   id: number
-): Promise<CustomFeedback[]> {
-  const res = await fetch(`${SERVER_ENDPOINT}/api/${slug}`);
-  return handleResponse<FeedbackListResponse>(res).then((data) => data);
+) {
+  const response = await fetch(`${SERVER_ENDPOINT}/${slug}`);
+  const data = await response.json();
+  
+  console.log("api request sideeeee" + response);
+  return data;
 }
 
 export async function apiDeleteFeedback(feedbackId: string): Promise<void> {
